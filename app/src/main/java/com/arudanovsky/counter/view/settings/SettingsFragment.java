@@ -4,6 +4,7 @@ import android.app.Presentation;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -29,6 +30,7 @@ import java.math.BigDecimal;
 public class SettingsFragment extends BaseFragment<MainActivityInterface> implements SettingsProtocol.SettingsView {
     private SettingsProtocol.SettingsPresenter mPresenter;
     private EditText mMaxValue, mIncrementStep;
+    private TextInputLayout mMaxValueLayout, mIncrementStepLayout;
 
     /**
      * Базовый метод для получения инстанса фрагмента
@@ -54,6 +56,9 @@ public class SettingsFragment extends BaseFragment<MainActivityInterface> implem
         mIncrementStep = (EditText) view.findViewById(R.id.settings_incr_step_et);
         Button resetButton = (Button) view.findViewById(R.id.settings_reset_button);
 
+        mMaxValueLayout = (TextInputLayout) view.findViewById(R.id.settings_max_val_til);
+        mIncrementStepLayout = (TextInputLayout) view.findViewById(R.id.settings_incr_step_til);
+
         resetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -67,6 +72,20 @@ public class SettingsFragment extends BaseFragment<MainActivityInterface> implem
         mIncrementStep.addTextChangedListener(new FieldWatcher(SettingsFieldType.INCREMENTATION_STEP));
 
         return view;
+    }
+
+    @Override
+    public void showFieldError(SettingsFieldType type, String string) {
+        switch (type) {
+            case MAX_VALUE:
+                mMaxValueLayout.setError(string);
+                break;
+            case INCREMENTATION_STEP:
+                mIncrementStepLayout.setError(string);
+                break;
+            default:
+                break;
+        }
     }
 
     /**

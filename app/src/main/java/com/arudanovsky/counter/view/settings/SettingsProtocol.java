@@ -18,6 +18,13 @@ public interface SettingsProtocol {
          * @param step шаг инкрементации
          */
         void updateView(String maxValue, String step);
+
+        /**
+         * Метод для отображения ошибок после валидации полей
+         * @param type тип поля
+         * @param string текст ошибки
+         */
+        void showFieldError(SettingsFieldType type, String string);
     }
     interface SettingsPresenter extends IPresenter {
         /**

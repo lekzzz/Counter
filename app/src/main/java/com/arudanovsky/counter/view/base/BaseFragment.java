@@ -3,6 +3,7 @@ package com.arudanovsky.counter.view.base;
 import android.content.Context;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.widget.Toast;
 
 /**
  * Created by arudanovskiy on 8/6/17.
@@ -39,7 +40,7 @@ public abstract class BaseFragment<T extends BaseActivityInterface> extends Frag
      */
     @Override
     public void showError(String message) {
-
+        Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
     }
 
     /**

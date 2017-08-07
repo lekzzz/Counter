@@ -1,6 +1,7 @@
 package com.arudanovsky.counter.view.settings;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.arudanovsky.counter.AppPreferences;
 import com.arudanovsky.counter.R;
@@ -20,6 +21,8 @@ class SettingsFragmentPresenter extends BasePresenter implements SettingsProtoco
     private BigDecimal mMaxValue, mIncrementationStep;
     private AppPreferences mPreferences;
     private Context mContext;
+    private boolean mMaxValueValid = true;
+    private boolean mStepValueValid = true;
 
     SettingsFragmentPresenter(Context context) {
         mContext = context;
@@ -55,16 +58,40 @@ class SettingsFragmentPresenter extends BasePresenter implements SettingsProtoco
      */
     @Override
     public void onTextChanged(SettingsFieldType type, String value) {
+        String errorText = null;
         switch (type) {
             case MAX_VALUE:
-                mMaxValue = new BigDecimal(value);
+                mMaxValueValid = isValid(value);
+                if (mMaxValueValid) {
+                    mMaxValue = new BigDecimal(value);
+                } else {
+                    errorText = mContext.getString(R.string.field_error);
+                }
                 break;
             case INCREMENTATION_STEP:
-                mIncrementationStep = new BigDecimal(value);
+                mStepValueValid = isValid(value);
+                if (mStepValueValid) {
+                    mIncrementationStep = new BigDecimal(value);
+                } else {
+                    errorText = mContext.getString(R.string.field_error);
+                }
                 break;
             default:
                 break;
         }
+        mView.showFieldError(type, errorText);
+    }
+
+    /**
+     * Метод проверяет, валидный ли введенный текст
+     * @param value текст, который нужно проверить
+     * @return решение, валидный он или нет
+     */
+    private static boolean isValid(String value) {
+        boolean valid = true;
+        if (TextUtils.isEmpty(value))
+            valid = false;
+        return valid;
     }
 
     /**
@@ -91,7 +118,12 @@ class SettingsFragmentPresenter extends BasePresenter implements SettingsProtoco
      */
     @Override
     public void unsubscribe() {
-        mPreferences.setCounterMaxValue(mMaxValue);
-        mPreferences.setCounterIncrementationStep(mIncrementationStep);
+        if (mMaxValueValid)
+            mPreferences.setCounterMaxValue(mMaxValue);
+        if (mStepValueValid)
+            mPreferences.setCounterIncrementationStep(mIncrementationStep);
+
+        if (!mMaxValueValid || !mStepValueValid)
+            mView.showError(mContext.getString(R.string.not_valid_values));
     }
 }

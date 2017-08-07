@@ -13,4 +13,6 @@
     <string name="reset">Reset</string>
     <string name="counter_reset">The counter was reset</string>
     <string name="counter_reach_max_value">The counter has reached the maximum value.\nThe counter was reset.</string>
+    <string name="field_error">Field cannot be empty</string>
+    <string name="not_valid_values">Some fields values are not valid.\nThey were restored to last valid value.</string>
 </resources>
