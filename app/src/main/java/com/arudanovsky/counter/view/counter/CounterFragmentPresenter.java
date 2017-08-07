@@ -1,5 +1,9 @@
 package com.arudanovsky.counter.view.counter;
 
+import android.content.Context;
+
+import com.arudanovsky.counter.AppPreferences;
+import com.arudanovsky.counter.R;
 import com.arudanovsky.counter.common.NumberUtils;
 import com.arudanovsky.counter.view.base.BasePresenter;
 import com.arudanovsky.counter.view.base.IPresenter;
@@ -13,9 +17,16 @@ import java.math.BigDecimal;
  * Вычисления, отображение обрабатываются согласно протоколу {@link CounterProtocol}
  */
 
-public class CounterFragmentPresenter extends BasePresenter implements CounterProtocol.CounterPresenter {
+class CounterFragmentPresenter extends BasePresenter implements CounterProtocol.CounterPresenter {
     private CounterProtocol.CounterView mView;
     private BigDecimal mIncrementStep, mCount, mMaxValue;
+    private AppPreferences mPreferences;
+    private Context mContext;
+
+    CounterFragmentPresenter (Context context) {
+        mContext = context;
+        mPreferences = new AppPreferences(context);
+    }
 
     /**
      * Общее описание в {@link IPresenter#subscribe()}
@@ -25,10 +36,10 @@ public class CounterFragmentPresenter extends BasePresenter implements CounterPr
      */
     @Override
     public void subscribe() {
-        mIncrementStep = BigDecimal.ONE;
-        mCount = BigDecimal.ZERO;
-        mMaxValue = BigDecimal.TEN;
-        mView.setupNumber(mCount);
+        mIncrementStep = mPreferences.getCounterIncrementationStep();
+        mCount = mPreferences.getCounterValue();
+        mMaxValue = mPreferences.getCounterMaxValue();
+        mView.setupNumber(mCount.toString());
     }
 
     /**
@@ -42,7 +53,9 @@ public class CounterFragmentPresenter extends BasePresenter implements CounterPr
     @Override
     public void onViewClicked() {
         mCount = NumberUtils.increment(mCount, mIncrementStep, mMaxValue);
-        mView.setupNumber(mCount);
+        if (mCount.compareTo(BigDecimal.ZERO) == 0)
+            mView.showShackbar(mContext.getString(R.string.counter_reach_max_value));
+        mView.setupNumber(mCount.toString());
     }
 
     /**
@@ -51,5 +64,14 @@ public class CounterFragmentPresenter extends BasePresenter implements CounterPr
     @Override
     public void onCreate(IView view) {
         mView = (CounterProtocol.CounterView) view;
+    }
+
+    /**
+     * Общее описание в {@link IPresenter#unsubscribe()}
+     * При описывании мы сохраняем данные.
+     */
+    @Override
+    public void unsubscribe() {
+        mPreferences.setCounterValue(mCount);
     }
 }

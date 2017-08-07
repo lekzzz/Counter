@@ -10,9 +10,6 @@ import android.widget.TextView;
 import com.arudanovsky.counter.R;
 import com.arudanovsky.counter.view.MainActivityInterface;
 import com.arudanovsky.counter.view.base.BaseFragment;
-import com.arudanovsky.counter.view.base.IView;
-
-import java.math.BigDecimal;
 
 /**
  * Created by arudanovskiy on 8/6/17.
@@ -36,7 +33,7 @@ public class CounterFragment extends BaseFragment<MainActivityInterface> impleme
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPresenter = new CounterFragmentPresenter();
+        mPresenter = new CounterFragmentPresenter(getContext());
         mPresenter.onCreate(this);
     }
 
@@ -57,21 +54,18 @@ public class CounterFragment extends BaseFragment<MainActivityInterface> impleme
         return view;
     }
 
-    /**
-     * Описание в {@link IView#showError(String)}
-     * @param message текст ошибки, которую увидит пользователь
-     */
     @Override
-    public void showError(String message) {
-        //todo show error
+    public void onDetach() {
+        mPresenter.unsubscribe();
+        super.onDetach();
     }
 
     /**
-     * Описание в {@link CounterProtocol.CounterView#setupNumber(BigDecimal)}
+     * Описание в {@link CounterProtocol.CounterView#setupNumber(String)}
      * @param number число для отображения
      */
     @Override
-    public void setupNumber(BigDecimal number) {
-        mCount.setText(number.toString());
+    public void setupNumber(String number) {
+        mCount.setText(number);
     }
 }

@@ -1,6 +1,7 @@
 package com.arudanovsky.counter.view.base;
 
 import android.content.Context;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 
 /**
@@ -10,7 +11,7 @@ import android.support.v4.app.Fragment;
  * экземпляр этого класса, должны имплементировать {@link BaseActivityInterface}
  */
 
-public abstract class BaseFragment<T extends BaseActivityInterface> extends Fragment {
+public abstract class BaseFragment<T extends BaseActivityInterface> extends Fragment implements IView{
     protected T mListener;
 
     /**
@@ -30,5 +31,24 @@ public abstract class BaseFragment<T extends BaseActivityInterface> extends Frag
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    /**
+     * Описание в {@link IView#showError(String)}
+     * @param message текст ошибки, которую увидит пользователь
+     */
+    @Override
+    public void showError(String message) {
+
+    }
+
+    /**
+     * Описание в {@link IView#showShackbar(String)}
+     * @param message текст сообщения
+     */
+    @Override
+    public void showShackbar(String message) {
+        if (getView() != null)
+            Snackbar.make(getView(), message, Snackbar.LENGTH_LONG).show();
     }
 }

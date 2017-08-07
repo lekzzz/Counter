@@ -13,4 +13,10 @@ public interface IView {
      * @param message текст ошибки, которую увидит пользователь
      */
     void showError(String message);
+
+    /**
+     * Метод для отображения какой-либо информации во фрагменте.
+     * @param message текст сообщения
+     */
+    void showShackbar(String message);
 }

@@ -1,6 +1,7 @@
 package com.arudanovsky.counter.view;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.design.widget.NavigationView;
@@ -105,7 +106,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         mSelectedMenuElement = item.getItemId();
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -119,6 +120,7 @@ public class MainActivity extends AppCompatActivity
      */
     @Override
     public void changeTitle(String title) {
-        getSupportActionBar().setTitle(title);
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setTitle(title);
     }
 }

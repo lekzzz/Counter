@@ -11,4 +11,6 @@
     <string name="max_value">Maximum value</string>
     <string name="incrementation_step">Incrementation step</string>
     <string name="reset">Reset</string>
+    <string name="counter_reset">The counter was reset</string>
+    <string name="counter_reach_max_value">The counter has reached the maximum value.\nThe counter was reset.</string>
 </resources>
