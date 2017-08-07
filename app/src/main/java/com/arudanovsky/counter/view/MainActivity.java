@@ -1,22 +1,17 @@
 package com.arudanovsky.counter.view;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 
 import com.arudanovsky.counter.R;
-import com.arudanovsky.counter.view.base.BaseActivityInterface;
 import com.arudanovsky.counter.view.counter.CounterFragment;
 
 /**
@@ -25,7 +20,10 @@ import com.arudanovsky.counter.view.counter.CounterFragment;
  */
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, MainActivityInterface {
-//    private int mChosenFragment = null;
+    private int mCurrentMenuElement;
+    private int mSelectedMenuElement = R.id.nav_counter;
+
+    private NavigationView mNavigation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +38,10 @@ public class MainActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        mNavigation = (NavigationView) findViewById(R.id.nav_view);
+        mNavigation.setNavigationItemSelectedListener(this);
+
+        selectMenu(mSelectedMenuElement);
     }
 
     @Override
@@ -54,27 +54,67 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Метод для обработки нажатия на элемент меню
+     * @param menuItemId id пункта меню
+     */
+    private void selectMenu(int menuItemId) {
+        checkMenuElement(menuItemId);
+        showContent(menuItemId);
+    }
+
+    /**
+     * Метод для отображения выбранного элемента в меню {@link MainActivity#mNavigation}
+     * @param menuItemId id пункта меню
+     */
+    private void checkMenuElement(int menuItemId) {
+        switch (menuItemId) {
+            case R.id.nav_counter:
+            case R.id.nav_settings:
+                mNavigation.getMenu().findItem(menuItemId).setChecked(true);
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * Метод для отображения контента в зависимости от выбранного элемента меню
+     * Если выбранный элемент уже отображается, то не происходит пересоздание фрагмента
+     * @param menuItemId id пункта меню
+     */
+    private void showContent(int menuItemId) {
+        if (mCurrentMenuElement != menuItemId) {
+            Fragment fragment = null;
+            switch (menuItemId) {
+                case R.id.nav_counter:
+                    fragment = CounterFragment.newInstance();
+                    break;
+                case R.id.nav_settings:
+                    break;
+            }
+            if (fragment != null) {
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.frame_container, fragment);
+                transaction.commit();
+                mCurrentMenuElement = menuItemId;
+            }
+        }
+    }
+
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        Fragment fragment = null;
-        switch (id) {
-            case R.id.nav_counter:
-                fragment = CounterFragment.newInstance();
-                break;
-            case R.id.nav_settings:
-                break;
-        }
-        if (fragment != null) {
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.frame_container, fragment);
-            transaction.commit();
-        }
+        mSelectedMenuElement = item.getItemId();
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+        selectMenu(mSelectedMenuElement);
         return true;
     }
 
+    /**
+     * Описание в {@link com.arudanovsky.counter.view.base.BaseActivityInterface}
+     * @param title нужное название экрана
+     */
     @Override
     public void changeTitle(String title) {
         getSupportActionBar().setTitle(title);

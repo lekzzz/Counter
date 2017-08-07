@@ -10,6 +10,9 @@ import android.widget.TextView;
 import com.arudanovsky.counter.R;
 import com.arudanovsky.counter.view.MainActivityInterface;
 import com.arudanovsky.counter.view.base.BaseFragment;
+import com.arudanovsky.counter.view.base.IView;
+
+import java.math.BigDecimal;
 
 /**
  * Created by arudanovskiy on 8/6/17.
@@ -22,6 +25,10 @@ public class CounterFragment extends BaseFragment<MainActivityInterface> impleme
     private CounterProtocol.CounterPresenter mPresenter;
     private TextView mCount;
 
+    /**
+     * Базовый метод для получения инстанса фрагмента
+     * @return инстанс {@link CounterFragment}
+     */
     public static CounterFragment newInstance() {
         return new CounterFragment();
     }
@@ -40,11 +47,31 @@ public class CounterFragment extends BaseFragment<MainActivityInterface> impleme
             mListener.changeTitle("Counter");
         View view = inflater.inflate(R.layout.fragment_counter, container, false);
         mCount = (TextView) view.findViewById(R.id.counter);
+        mCount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPresenter.onViewClicked();
+            }
+        });
+        mPresenter.subscribe();
         return view;
     }
 
+    /**
+     * Описание в {@link IView#showError(String)}
+     * @param message текст ошибки, которую увидит пользователь
+     */
     @Override
     public void showError(String message) {
         //todo show error
+    }
+
+    /**
+     * Описание в {@link CounterProtocol.CounterView#setupNumber(BigDecimal)}
+     * @param number число для отображения
+     */
+    @Override
+    public void setupNumber(BigDecimal number) {
+        mCount.setText(number.toString());
     }
 }
