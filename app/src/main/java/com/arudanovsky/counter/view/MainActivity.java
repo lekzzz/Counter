@@ -13,6 +13,7 @@ import android.view.MenuItem;
 
 import com.arudanovsky.counter.R;
 import com.arudanovsky.counter.view.counter.CounterFragment;
+import com.arudanovsky.counter.view.settings.SettingsFragment;
 
 /**
  * Главная активити
@@ -91,6 +92,7 @@ public class MainActivity extends AppCompatActivity
                     fragment = CounterFragment.newInstance();
                     break;
                 case R.id.nav_settings:
+                    fragment = SettingsFragment.newInstance();
                     break;
             }
             if (fragment != null) {

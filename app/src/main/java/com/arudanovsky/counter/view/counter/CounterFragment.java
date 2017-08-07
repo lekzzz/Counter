@@ -44,7 +44,7 @@ public class CounterFragment extends BaseFragment<MainActivityInterface> impleme
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (mListener != null)
-            mListener.changeTitle("Counter");
+            mListener.changeTitle(getString(R.string.counter));
         View view = inflater.inflate(R.layout.fragment_counter, container, false);
         mCount = (TextView) view.findViewById(R.id.counter);
         mCount.setOnClickListener(new View.OnClickListener() {
