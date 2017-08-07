@@ -25,7 +25,7 @@ import static org.hamcrest.Matchers.allOf;
 public class CounterFragmentTest extends BaseFragmentTest{
 
     @Test
-    public void fragmentIsDisplayed() {
+    public void fragmentTest() {
         activityRule.getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {

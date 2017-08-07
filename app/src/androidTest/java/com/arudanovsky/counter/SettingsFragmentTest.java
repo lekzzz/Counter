@@ -32,7 +32,7 @@ import static org.hamcrest.Matchers.allOf;
 public class SettingsFragmentTest extends BaseFragmentTest {
 
     @Test
-    public void fragmentIsDisplayed() {
+    public void fragmentTest() {
         activityRule.getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {

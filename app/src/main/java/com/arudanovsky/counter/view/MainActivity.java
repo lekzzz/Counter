@@ -22,6 +22,9 @@ import com.arudanovsky.counter.view.settings.SettingsFragment;
  */
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, MainActivityInterface {
+    public static final String COUNTER_TAG = "counter";
+    public static final String SETTINGS_TAG = "settings";
+
     private int mCurrentMenuElement;
     private int mSelectedMenuElement = R.id.nav_counter;
 
@@ -88,17 +91,20 @@ public class MainActivity extends AppCompatActivity
     private void showContent(int menuItemId) {
         if (mCurrentMenuElement != menuItemId) {
             Fragment fragment = null;
+            String tag = null;
             switch (menuItemId) {
                 case R.id.nav_counter:
                     fragment = CounterFragment.newInstance();
+                    tag = COUNTER_TAG;
                     break;
                 case R.id.nav_settings:
                     fragment = SettingsFragment.newInstance();
+                    tag = SETTINGS_TAG;
                     break;
             }
             if (fragment != null) {
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.frame_container, fragment);
+                transaction.replace(R.id.frame_container, fragment, tag);
                 transaction.commit();
                 mCurrentMenuElement = menuItemId;
             }

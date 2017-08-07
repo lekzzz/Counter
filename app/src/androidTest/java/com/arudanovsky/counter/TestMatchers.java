@@ -1,6 +1,7 @@
 package com.arudanovsky.counter;
 
 import android.support.design.widget.TextInputLayout;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import org.hamcrest.Description;
@@ -34,7 +35,6 @@ class TestMatchers {
         };
     }
 
-
     static Matcher<View> hasTextInputLayoutErrorText(final String expectedText) {
         return new TypeSafeMatcher<View>() {
             @Override
@@ -48,6 +48,27 @@ class TestMatchers {
                 }
                 String error = charSequence.toString();
                 return expectedText.equals(error);
+            }
+
+            @Override
+            public void describeTo(Description description) {
+            }
+        };
+    }
+
+    static Matcher<View> toolbarTitleMatches(final String expectedText) {
+        return new TypeSafeMatcher<View>() {
+            @Override
+            public boolean matchesSafely(View view) {
+                if (!(view instanceof Toolbar)) {
+                    return false;
+                }
+                CharSequence charSequence = ((Toolbar) view).getTitle();
+                if (charSequence == null) {
+                    return false;
+                }
+                String title = charSequence.toString();
+                return expectedText.equals(title);
             }
 
             @Override
